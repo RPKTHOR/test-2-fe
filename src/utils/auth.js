@@ -1,4 +1,11 @@
 import {jwtDecode} from "jwt-decode";
+export const getUserId = () => {
+  const token = getToken();
+  if (!token) return null;
+  const decoded = jwtDecode(token);
+  return decoded.id || null; // Use the numeric id
+};
+
 
 export const storeToken = (token) => {
   localStorage.setItem("token", token);

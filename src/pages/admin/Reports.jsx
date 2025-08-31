@@ -5,7 +5,7 @@ function Reports() {
   const [report, setReport] = useState(null);
 
   useEffect(() => {
-    api.get("/reports/sales").then((res) => setReport(res.data));
+    api.get("pages/admin/Reports").then((res) => setReport(res.data));
   }, []);
 
   return (

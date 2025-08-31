@@ -1,19 +1,24 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api";
-import { storeToken, getUserRole } from "../utils/auth";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const res = await api.post("/auth/login", { email, password });
-      storeToken(res.data.token);
-      const role = getUserRole();
-      navigate(role === "ROLE_ADMIN" ? "/admin" : "/customer");
+      const res = await login(email, password);
+      const roles = res.roles || [];
+      if (roles.includes("ROLE_ADMIN")) {
+        navigate("/admin");
+      } else if (roles.includes("ROLE_CUSTOMER")) {
+        navigate("/customer");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       alert("Login failed");
     }
